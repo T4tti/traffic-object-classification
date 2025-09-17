@@ -43,4 +43,4 @@ class DeformableDETR(nn.Module):
             Dictionary containing model outputs
         """
         # TODO: Implement forward pass
-        pass
+        raise NotImplementedError("Forward method not implemented yet.")
