@@ -1,0 +1,50 @@
+# RetinaNet Configuration for Traffic Object Classification
+
+model:
+  name: "retinanet"
+  backbone: "resnet50"
+  num_classes: 10  # Adjust based on your traffic object classes
+  pretrained: true
+  
+dataset:
+  type: "balanced"  # or "imbalanced"
+  train_data_dir: "data/balanced/train"  # or "data/imbalanced/train"
+  val_data_dir: "data/balanced/val"      # or "data/imbalanced/val"
+  test_data_dir: "data/balanced/test"    # or "data/imbalanced/test"
+  annotation_format: "coco"  # or "yolo", "xml"
+  
+  # Data augmentation
+  transforms:
+    train:
+      - resize: [512, 512]
+      - horizontal_flip: 0.5
+      - color_jitter: 0.1
+      - normalize: true
+    val:
+      - resize: [512, 512]
+      - normalize: true
+
+training:
+  batch_size: 8
+  num_epochs: 100
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler: "cosine"
+  
+  # Loss configuration
+  focal_loss:
+    alpha: 0.25
+    gamma: 2.0
+  
+  # Checkpoint settings
+  save_every: 10
+  save_best: true
+  
+logging:
+  wandb:
+    project: "traffic-object-classification"
+    name: "retinanet-balanced"
+  tensorboard: true
+  
+device: "cuda"  # or "cpu"
