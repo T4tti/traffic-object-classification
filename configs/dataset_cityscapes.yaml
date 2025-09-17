@@ -1,0 +1,39 @@
+# Dataset-specific configuration
+dataset:
+  name: "cityscapes"
+  root_dir: "data/cityscapes"
+  train_split: "train"
+  val_split: "val"
+  test_split: "test"
+  
+  # Cityscapes specific settings
+  image_size: 1024
+  batch_size: 2  # Large images require smaller batch
+  crop_size: [512, 1024]
+  
+  # Class mapping for traffic objects only
+  classes:
+    names: [
+      "background",
+      "person",
+      "rider", 
+      "car",
+      "truck",
+      "bus",
+      "train",
+      "motorcycle",
+      "bicycle",
+      "traffic_light",
+      "traffic_sign"
+    ]
+
+training:
+  epochs: 80
+  learning_rate: 5e-5  # Lower LR for fine-tuning
+  warmup_epochs: 3
+
+# Override base configuration for Cityscapes
+augmentation:
+  horizontal_flip: 0.5
+  scale_jitter: [0.8, 1.2]
+  crop_probability: 0.8

@@ -1,0 +1,112 @@
+# Default configuration for RetinaNet training
+model:
+  name: "retinanet"
+  num_classes: 10
+  backbone: "resnet50"
+  pretrained: true
+  trainable_backbone_layers: 3
+  
+  # RetinaNet specific parameters
+  min_size: 800
+  max_size: 1333
+  score_thresh: 0.05
+  nms_thresh: 0.5
+  detections_per_img: 300
+
+dataset:
+  name: "traffic"
+  root_dir: "data/traffic"
+  train_split: "train"
+  val_split: "val" 
+  test_split: "test"
+  
+  # Data processing
+  image_size: 512
+  batch_size: 8
+  num_workers: 4
+  shuffle: true
+  
+  # Data augmentation
+  augmentation:
+    enabled: true
+    horizontal_flip: 0.5
+    brightness_contrast: 0.5
+    motion_blur: 0.2
+    optical_distortion: 0.3
+
+training:
+  epochs: 100
+  learning_rate: 1e-4
+  weight_decay: 1e-4
+  
+  # Optimizer settings
+  optimizer: "adamw"
+  momentum: 0.9  # For SGD
+  
+  # Scheduler settings
+  scheduler: "cosine"
+  warmup_epochs: 5
+  step_size: 30  # For StepLR
+  gamma: 0.1     # For StepLR
+  
+  # Training control
+  save_every: 10
+  eval_every: 5
+  early_stopping_patience: 20
+  gradient_clip_norm: 1.0
+
+evaluation:
+  iou_threshold: 0.5
+  confidence_threshold: 0.5
+  metrics: ["mAP", "AP50", "AP75", "precision", "recall", "f1"]
+
+# Loss function weights
+loss:
+  classification_weight: 1.0
+  bbox_regression_weight: 1.0
+  focal_loss:
+    alpha: 0.25
+    gamma: 2.0
+
+# Class configuration
+classes:
+  names: [
+    "background",
+    "car", 
+    "truck",
+    "bus", 
+    "motorcycle",
+    "bicycle",
+    "person",
+    "traffic_light",
+    "traffic_sign",
+    "stop_sign"
+  ]
+  
+  # Class weights for imbalanced datasets
+  weights: null  # Will be computed automatically if null
+
+# Paths
+paths:
+  data_dir: "data"
+  output_dir: "outputs"
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  results_dir: "results"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_to_console: true
+  
+  # Weights & Biases
+  use_wandb: false
+  wandb_project: "traffic-object-detection"
+  wandb_entity: null
+
+# Hardware settings
+device: "auto"  # "auto", "cpu", "cuda", "cuda:0", etc.
+mixed_precision: false
+deterministic: false
+random_seed: 42
